@@ -1,3 +1,6 @@
+#!/bin/sh
+echo "Starting databox test env"
+
 docker kill zest
 docker kill arbiter
 
@@ -29,5 +32,3 @@ echo "Granting permissions for app called " $HOST_NAME
 docker run --network host -it ${ZEST_IMAGE_VERSION} /app/zest/client.exe --server-key 'vl6wu0A@XP?}Or/&BR#LSxn>A+}L)p44/W[wXL3<' --path '/cm/grant-container-permissions' --mode post --payload "{\"name\": \"${HOST_NAME}\", \"caveats\": [], \"route\": {\"method\": \"POST\", \"path\": \"/*\", \"target\": \"127.0.0.1\"}}" --token secret --request-endpoint 'tcp://127.0.0.1:4444' --token secret
 docker run --network host -it ${ZEST_IMAGE_VERSION} /app/zest/client.exe --server-key 'vl6wu0A@XP?}Or/&BR#LSxn>A+}L)p44/W[wXL3<' --path '/cm/grant-container-permissions' --mode post --payload "{\"name\": \"${HOST_NAME}\", \"caveats\": [], \"route\": {\"method\": \"GET\", \"path\": \"/*\", \"target\": \"127.0.0.1\"}}" --token secret --request-endpoint 'tcp://127.0.0.1:4444' --token secret
 docker run --network host -it ${ZEST_IMAGE_VERSION} /app/zest/client.exe --server-key 'vl6wu0A@XP?}Or/&BR#LSxn>A+}L)p44/W[wXL3<' --path '/cm/grant-container-permissions' --mode post --payload "{\"name\": \"${HOST_NAME}\", \"caveats\": [], \"route\": {\"method\": \"DELETE\", \"path\": \"/*\", \"target\": \"127.0.0.1\"}}" --token secret --request-endpoint 'tcp://127.0.0.1:4444' --token secret
-
-
