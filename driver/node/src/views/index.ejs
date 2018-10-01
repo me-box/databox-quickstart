@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <title>Hello world driver</title>
+</head>
+
+<body>
+    <div>
+        current config is:
+        <%= config %>
+    </div>
+    <form name="config" method="post" action="/ui/setConfig">
+        <input type="text" name="config" />
+        <input type="submit" value="update" />
+    </form>
+</body>
+
+</html>
