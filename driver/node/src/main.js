@@ -5,7 +5,7 @@ var bodyParser = require("body-parser");
 var databox = require("node-databox");
 
 const DATABOX_ZMQ_ENDPOINT = process.env.DATABOX_ZMQ_ENDPOINT || "tcp://127.0.0.1:5555";
-const DATABOX_TESTING = true;//process.env.DATABOX_TESTING || false;
+const DATABOX_TESTING = process.env.DATABOX_TESTING || false;
 
 const credentials = databox.getHttpsCredentials();
 const PORT = process.env.port || '8080';
