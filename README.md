@@ -2,7 +2,7 @@
 
 This repository is for developers wishing to wriet drivers and apps for the databox platform.  For more information on databox, see our [project page](http://www.databoxproject.uk/) or [main github repo](https://github.com/me-box/databox)
 
-##TLDR;
+## TLDR
 
 This repo contains all you need to create and test apps and drivers outside of the databox platform.  The only dependency that it has is an installation of Docker.  Note that this guide assumes that your base platform is MacOS or a flavour of linux - we do not current support development on Windows.
 
@@ -17,7 +17,7 @@ chmod a+x start.sh
 
 This will create two docker containers, zest and arbiter, which your testcode will communicate with to emulate communication with the databox.   To run a basic hello world example, go to the app/driver directory and choose your favoured language we currently support nodejs and golang, though python support is also in the pipeline.    Each of the directories contain the instructions you need to compile and run a basic "hello world" app/driver.
 
-##Writing a driver
+## Writing a driver
 
 A databox driver is responsible for writing data to a datastore to make it available for apps.  Drivers are privileged code, so have unrestricted access to external addresses/ports.  We assume, in most cases that a databox will not have a externally accessible static IP address, so the typical approach is to require that drivers initiate communication to a datasource to gather data (rather than assuming the driver exposes a defined endpoint for datasources to connect to).  
 
@@ -36,11 +36,11 @@ They will also typically contain logic that will:
 
 Steps 1 & 2 & 5 are most easily accomplished though use of the databox libraries.  It is possible to write components without the using the libraries, though this will require use a socket for writing binary data that conforms to our proprietary binary zeromq protocol (details can be found [here](https://me-box.github.io/zestdb/)).
 
-##Writing an app
+## Writing an app
 
 The process for writing an app is not to dissimilar from writing a driver, however, apps are untrusted code, and are therefore more restricted.  In particular they can only communicate with stores, and they are restricted to opening a port on 8080, to provide a web interface. Apps CANNOT directly access external addresses.  If they wish to do so, they must be defined explicitly in the manifest and must use the databox's export service.
 
-##Testing on the databox platform
+## Testing on the databox platform
 
 manifest,
 tagging etc.
