@@ -42,5 +42,23 @@ The process for writing an app is not to dissimilar from writing a driver, howev
 
 ## Testing on the databox platform
 
-manifest,
-tagging etc.
+These instructions assume you have a working databox.  If you do not, please read the instructions [here](https://github.com/me-box/databox). To test your app/driver on the databox platform you'll need to run through several additional steps:
+
+1. "Dockerise" your app - i.e. make it run in a docker container.  This is relatively straight forward, and will simply require you to create a Dockerfile - again, there are examples of these for apps/drivers in each of the directories for each language. 
+2. Create a databox-manifest.json file.  There are also examples of these in each of the src directories.
+3. Build/copy your docker image on the databox.  One simple approach is to register for an account at [docker hub](https://hub.docker.com/) and then push you docker container there.  You can then pull it onto the databox.
+4. Name your image so that databox can find it.  By default databox searches for its images at databoxsystems (this is configurable but we'll ignore this for now).  Databox also uses a naming scheme as follows: appname-[architecture]:version. For example if you have an app called myapp, running version 0.5.1 on an 64bit x86-based machine then your image will need to be called:
+
+```
+databoxsystems/myapp-amd64:0.5.0
+```
+
+to tag your image correctly, simply do the following:
+
+```
+docker tag [myimagename] databoxsystems/[myimagename]-amd64:0.5.0
+```
+
+5.  Finally, you'll need to upload your manifest file to tell databox about the new app/driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the bottom of the page, use the form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see it ready to download.
+
+
