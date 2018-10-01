@@ -1,0 +1,27 @@
+{
+	"manifest-version": 1,
+
+	"name": "go-test-driver",
+	"databox-type": "driver",
+	"version": "0.5.0",
+
+	"description": "An driver that shows how to write a basic go driver.",
+	"author": "Tosh Brown <Anthony.Brown@nottingham.ac.uk>",
+	"license": "MIT",
+	"tags": [
+		"test",
+		"driver",
+		"databox"
+	],
+
+	"homepage": "https://github.com/me-box/databox-quickstart/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/me-box/databox-quickstart/"
+	},
+
+	"resource-requirements": {
+		"store": "core-store"
+	}
+
+}
