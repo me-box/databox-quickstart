@@ -1,0 +1,48 @@
+{
+	"manifest-version": 1,
+
+	"name": "go-test-app",
+	"databox-type": "app",
+	"version": "0.5.0",
+
+	"description": "An app that shows how to write a basic go app.",
+	"author": "Tosh Brown <Anthony.Brown@nottingham.ac.uk>",
+	"license": "MIT",
+	"tags": [
+		"test",
+		"app",
+		"databoox"
+	],
+
+	"homepage": "https://github.com/me-box/databox-quickstart/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/me-box/databox-quickstart/"
+	},
+
+	"packages": [
+		{
+			"name": "Test",
+			"purpose": "Display the data from the test driver",
+			"install": "required",
+			"risks": "None.",
+			"benefits": "You can see the data the driver has written!",
+			"datastores": ["testdata"]
+		}
+	],
+	"allowed-combinations":[ ],
+	"datasources": [
+		{
+			"type": "databox-test:testdata",
+			"required": true,
+			"name": "databox-test:testdata",
+			"clientid": "testdata",
+			"granularities": []
+		}
+	],
+
+	"export-whitelist": [],
+
+	"resource-requirements": {}
+
+}
