@@ -1,0 +1,34 @@
+{
+    "manifest-version": 1,
+    "name": "databox-driver-helloworld-node",
+    "version": "0.1.0",
+    "description": "basic node hello world driver",
+    "author": "Databox Inc.",
+    "licence": "MIT",
+    "databox-type": "app",
+    "tags": [
+        "test",
+        "hello world"
+    ],
+    "homepage": "https://github.com/me-box/databox-quickstart",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/me-box/databox-quickstart.git"
+    },
+    "packages": [
+        {
+            "id": "databox-helloworld-package",
+            "name": "hello world package",
+            "purpose": "to demo a basic node databox driver",
+            "required": false,
+            "datastores": [],
+            "benefits": "demo of basic func"
+        }
+    ],
+    "allowed-combinations": [],
+    "datasources": [],
+    "network-permissions": [],
+    "resource-requirements": {},
+    "volumes": [],
+    "export-whitelist": []
+}
