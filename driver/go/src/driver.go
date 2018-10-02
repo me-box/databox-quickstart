@@ -4,13 +4,11 @@ import (
 	"crypto/tls"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
-	"net/http"
-
 	"github.com/gorilla/mux"
-
 	libDatabox "github.com/me-box/lib-go-databox"
 )
 
@@ -21,35 +19,44 @@ const testStoreEndpoint = "tcp://127.0.0.1:5555"
 func main() {
 	libDatabox.Info("Starting ....")
 
-	//turn on debug output for the databox library
-	libDatabox.OutputDebug(true)
+	//Are we running inside databox?
+	DataboxTestMode := os.Getenv("DATABOX_VERSION") == ""
 
-	//Read in the store endpoint provided by databox
-	DataboxZmqEndpoint := os.Getenv("DATABOX_STORE_ENDPOINT")
-	DataboxTestMode := false
-	if DataboxZmqEndpoint == "" {
-		//if this is not available we are outside databox or something ver bad has happened
-		libDatabox.Warn("DATABOX_ZMQ_ENDPOINT is not set running in test mode")
-		DataboxZmqEndpoint = testStoreEndpoint
-		DataboxTestMode = true
+	// Read in the store endpoint provided by databox
+	// this is a driver so you will get a core-store
+	// and you are responsible for registering datasources
+	// and writing in data.
+	var DataboxStoreEndpoint string
+	var storeClient *libDatabox.CoreStoreClient
+	httpServerPort := "8080"
+	if DataboxTestMode {
+		DataboxStoreEndpoint = testStoreEndpoint
+		ac, _ := libDatabox.NewArbiterClient("./", "./", testArbiterEndpoint)
+		storeClient = libDatabox.NewCoreStoreClient(ac, "./", DataboxStoreEndpoint, false)
+		//turn on debug output for the databox library
+		libDatabox.OutputDebug(true)
+	} else {
+		DataboxStoreEndpoint = os.Getenv("DATABOX_STORE_ENDPOINT")
+		storeClient = libDatabox.NewDefaultCoreStoreClient(DataboxStoreEndpoint)
 	}
 
-	go doDriverWork(DataboxTestMode, DataboxZmqEndpoint)
-	setUpWebServer(DataboxTestMode)
+	// start a go routine to do some long running work.
+	// You can have may of these structure you program
+	// as you see fit.
+	go doDriverWork(DataboxTestMode, storeClient)
+
+	//The endpoints and routing for the UI
+	router := mux.NewRouter()
+	router.HandleFunc("/status", statusEndpoint).Methods("GET")
+	router.PathPrefix("/ui").Handler(http.StripPrefix("/ui", http.FileServer(http.Dir("./static"))))
+	setUpWebServer(DataboxTestMode, router, httpServerPort)
+
+	libDatabox.Info("Exiting ....")
 
 }
 
-func doDriverWork(testMode bool, storeEndpoint string) {
+func doDriverWork(testMode bool, storeClient *libDatabox.CoreStoreClient) {
 	libDatabox.Info("starting doDriverWork")
-	//connect to the store
-	var coreStoreClient *libDatabox.CoreStoreClient
-	if testMode {
-		ac, _ := libDatabox.NewArbiterClient("./", "./", "tcp://127.0.0.1:4444")
-		coreStoreClient = libDatabox.NewCoreStoreClient(ac, "./", storeEndpoint, false)
-	} else {
-		coreStoreClient = libDatabox.NewDefaultCoreStoreClient(storeEndpoint)
-	}
-	libDatabox.Info("Connected to store")
 
 	//register our datasources
 	//we only need to do this once at start up
@@ -63,7 +70,7 @@ func doDriverWork(testMode bool, storeEndpoint string) {
 		IsActuator:     false,
 		IsFunc:         false,
 	}
-	err := coreStoreClient.RegisterDatasource(testDatasource)
+	err := storeClient.RegisterDatasource(testDatasource)
 	if err != nil {
 		libDatabox.Err("Error Registering Datasource " + err.Error())
 		return
@@ -75,7 +82,7 @@ func doDriverWork(testMode bool, storeEndpoint string) {
 	for {
 		writeCount++
 		jsonData := fmt.Sprintf(`{"data":"%d"}`, writeCount)
-		err := coreStoreClient.TSBlobJSON.Write("testdata1", []byte(jsonData))
+		err := storeClient.TSBlobJSON.Write("testdata1", []byte(jsonData))
 		if err != nil {
 			libDatabox.Err("Error Write Datasource " + err.Error())
 		}
@@ -84,27 +91,29 @@ func doDriverWork(testMode bool, storeEndpoint string) {
 	}
 }
 
-func setUpWebServer(testMode bool) {
-	//setup webserver routes
-	router := mux.NewRouter()
+func statusEndpoint(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("active\n"))
+}
 
-	//The endpoints and routing for the app
-	router.HandleFunc("/status", statusEndpoint).Methods("GET")
-	router.PathPrefix("/ui").Handler(http.StripPrefix("/ui", http.FileServer(http.Dir("./static"))))
+func setUpWebServer(testMode bool, r *mux.Router, port string) {
+
+	//Start up a well behaved HTTP/S server for displying the UI
+
+	srv := &http.Server{
+		Addr:         ":" + port,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  30 * time.Second,
+		Handler:      r,
+	}
 
 	if testMode {
-		//set up an http server fr testing
-		srv := &http.Server{
-			Addr:         ":8080",
-			ReadTimeout:  30 * time.Second,
-			WriteTimeout: 30 * time.Second,
-			IdleTimeout:  30 * time.Second,
-			Handler:      router,
-		}
-		libDatabox.Info("Waiting for http requests on port http://127.0.0.1:8080/ui ....")
+		//set up an http server for testing
+		libDatabox.Info("Waiting for http requests on port http://127.0.0.1" + srv.Addr + "/ui ....")
 		log.Fatal(srv.ListenAndServe())
 	} else {
-		//Start up a well behaved HTTPS server for displying the UI
+		//configure tls
 		tlsConfig := &tls.Config{
 			PreferServerCipherSuites: true,
 			CurvePreferences: []tls.CurveID{
@@ -112,25 +121,9 @@ func setUpWebServer(testMode bool) {
 			},
 		}
 
-		srv := &http.Server{
-			Addr:         ":8080",
-			ReadTimeout:  30 * time.Second,
-			WriteTimeout: 30 * time.Second,
-			IdleTimeout:  30 * time.Second,
-			TLSConfig:    tlsConfig,
-			Handler:      router,
-		}
-		libDatabox.Info("Waiting for https requests on port 8080 ....")
+		srv.TLSConfig = tlsConfig
+
+		libDatabox.Info("Waiting for https requests on port " + srv.Addr + " ....")
 		log.Fatal(srv.ListenAndServeTLS(libDatabox.GetHttpsCredentials(), libDatabox.GetHttpsCredentials()))
 	}
-	libDatabox.Info("Exiting ....")
-}
-
-func statusEndpoint(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("active\n"))
-}
-
-func getData(w http.ResponseWriter, r *http.Request) {
-	//todo
 }

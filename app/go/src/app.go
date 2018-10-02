@@ -14,6 +14,10 @@ import (
 	libDatabox "github.com/me-box/lib-go-databox"
 )
 
+//default addresses to be used in testing mode
+const testArbiterEndpoint = "tcp://127.0.0.1:4444"
+const testStoreEndpoint = "tcp://127.0.0.1:5555"
+
 func main() {
 	libDatabox.Info("Starting ....")
 
@@ -22,13 +26,13 @@ func main() {
 
 	//Read in the information on the datasources that databox passed to the app
 	var testDataSource libDatabox.DataSourceMetadata
-	var testStoreEndpoint string
+	var storeEndpoint string
 	var storeClient *libDatabox.CoreStoreClient
-	httpServerPost := "8080"
+	httpServerPort := "8080"
 	if DataboxTestMode {
 		libDatabox.Warn("Missing DATASOURCE_TESTDATA assuming we are outside of databox")
-		testStoreEndpoint = "tcp://127.0.0.1:5555"
-		httpServerPost = "8081" //this is needed to avoid collisions with the driver you can use any free port
+		storeEndpoint = testStoreEndpoint
+		httpServerPort = "8081" //this is needed to avoid collisions with the driver you can use any free port
 		//Fake the datasource information which we would normally get from databox as an env var
 		testDataSource = libDatabox.DataSourceMetadata{
 			Description:    "A test datasource",        //required
@@ -43,26 +47,27 @@ func main() {
 		//turn on debug output for the databox library
 		libDatabox.OutputDebug(true)
 		//Set up a store client you will need one of these per store
-		ac, _ := libDatabox.NewArbiterClient("./", "./", "tcp://127.0.0.1:4444")
-		storeClient = libDatabox.NewCoreStoreClient(ac, "./", testStoreEndpoint, false)
+		ac, _ := libDatabox.NewArbiterClient("./", "./", testArbiterEndpoint)
+		storeClient = libDatabox.NewCoreStoreClient(ac, "./", storeEndpoint, false)
 	} else {
-		//This is the standard setup for inside databox 
+		//This is the standard setup for inside databox
 		var err error
-		testDataSource, testStoreEndpoint, err = libDatabox.HypercatToDataSourceMetadata(os.Getenv("DATASOURCE_TESTDATA"))
+		testDataSource, storeEndpoint, err = libDatabox.HypercatToDataSourceMetadata(os.Getenv("DATASOURCE_TESTDATA"))
 		libDatabox.ChkErr(err)
-		//Set up a store client you will need one of these per store
-		storeClient = libDatabox.NewDefaultCoreStoreClient(testStoreEndpoint)
+		// Set up a store client you will need one of these per store
+		// if you asked for more then one data source in your manifest
+		// there will be more then one env var provided by databox DATASOURCE_[manifest client id]
+		storeClient = libDatabox.NewDefaultCoreStoreClient(storeEndpoint)
 	}
 
-	//setup webserver routes
+	//The endpoints and routing for the app UI
 	router := mux.NewRouter()
-	//The endpoints and routing for the app
 	router.HandleFunc("/status", statusEndpoint).Methods("GET")
 	router.HandleFunc("/ui/getData", getData(testDataSource, storeClient)).Methods("GET")
 	router.PathPrefix("/ui").Handler(http.StripPrefix("/ui", http.FileServer(http.Dir("./static"))))
 
 	//setup webserver
-	setUpWebServer(DataboxTestMode, router, httpServerPost)
+	setUpWebServer(DataboxTestMode, router, httpServerPort)
 
 	libDatabox.Info("Exiting ....")
 }
