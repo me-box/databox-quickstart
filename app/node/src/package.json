@@ -1,12 +1,12 @@
 {
-  "name": "helloworld-node-driver",
+  "name": "helloworld-node-app",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node main.js",
-    "docker": "docker build -t databox-driver-helloworld-node ."
+    "docker": "docker build -t databox-app-helloworld-node ."
   },
   "author": "Databox Inc",
   "license": "MIT",

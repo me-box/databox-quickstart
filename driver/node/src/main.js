@@ -5,7 +5,7 @@ var bodyParser = require("body-parser");
 var databox = require("node-databox");
 
 const DATABOX_ZMQ_ENDPOINT = process.env.DATABOX_ZMQ_ENDPOINT || "tcp://127.0.0.1:5555";
-const DATABOX_TESTING = process.env.DATABOX_TESTING || false;
+const DATABOX_TESTING = !(process.env.DATABOX_VERSION);
 
 const credentials = databox.getHttpsCredentials();
 const PORT = process.env.port || '8080';
@@ -107,7 +107,7 @@ app.get("/status", function (req, res) {
 
 //when testing, we run as http, (to prevent the need for self-signed certs etc);
 if (DATABOX_TESTING) {
-    console.log("[Creating test http server]", PORT);
+    console.log("[Creating TEST http server]", PORT);
     http.createServer(app).listen(PORT);
 } else {
     console.log("[Creating https server]", PORT);

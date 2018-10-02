@@ -1,11 +1,11 @@
 {
     "manifest-version": 1,
-    "name": "databox-driver-helloworld-node",
+    "name": "databox-app-helloworld-node",
     "version": "0.1.0",
-    "description": "basic node hello world driver",
+    "description": "basic node hello world app",
     "author": "Databox Inc.",
     "licence": "MIT",
-    "databox-type": "driver",
+    "databox-type": "app",
     "tags": [
         "test",
         "hello world"
@@ -19,7 +19,7 @@
         {
             "id": "databox-helloworld-package",
             "name": "hello world package",
-            "purpose": "to demo a basic node databox driver",
+            "purpose": "to demo a basic node databox app",
             "required": false,
             "datastores": [],
             "benefits": "demo of basic func"
