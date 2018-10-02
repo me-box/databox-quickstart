@@ -1,4 +1,4 @@
-IMAGE_NAME=core-ui
+IMAGE_NAME=go-test-driver
 DEFAULT_REG=toshbrown
 VERSION=latest
 
