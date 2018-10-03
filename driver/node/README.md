@@ -38,4 +38,4 @@ or if you are running the latest bleeding-edge version of the platform you can d
 docker tag [dockerhubusername]/databox-driver-helloworld-node databoxsystems/databox-driver-helloworld-node-amd64
 ```
 
-Finally, you'll need to upload your manifest file to tell databox about the new app/driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the bottom of the page, use the form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see it ready to install. 
+Finally, you'll need to upload your manifest file to tell databox about the new driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the bottom of the page, use the form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see databox-driver-helloworld-node ready to install. 

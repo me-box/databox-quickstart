@@ -8,11 +8,82 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="shortcut icon" href="/favicon.ico">
     <title>Hello world app</title>
+    <script>
+
+        function baseWSProtocol() {
+            return (<%= testing %>) ?"ws" : "wss";
+        }
+
+        function baseHTTPProtocol() {
+            return (<%= testing %>) ?"http" : "https";
+        }
+
+        function baseURL() {
+            if (<%= testing %>) {
+                return "127.0.0.1:8090"
+            }else {
+                const paths = window.location.pathname.split("/");
+
+                if (paths.length > 1) {
+                    if (paths[paths.length - 2] != "") {
+                        pathname = `/${paths[paths.length - 2]}`;
+                    }
+                }
+                return `${window.location.host}${pathname}`
+            }
+        }
+
+        function actuate() {
+            var xhr = new XMLHttpRequest();
+
+            console.log("calling", `${baseHTTPProtocol()}://${baseURL()}/ui/actuate`);
+
+            xhr.open('GET', `${baseHTTPProtocol()}://${baseURL()}/ui/actuate`);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log(xhr.responseText);
+                }
+                else {
+                    console.log(xhr.status);
+                }
+            };
+            xhr.send();
+        }
+
+        window.addEventListener('load', function () {
+            console.log("creating websocket", `${baseWSProtocol()}://${baseURL()}/ui/ws`)
+            const socket = new WebSocket(`${baseWSProtocol()}://${baseURL()}/ui/ws`);
+
+            socket.onopen = function () {
+                console.log("successfully connected to server websocket")
+            }
+
+            socket.onclose = function () {
+                console.log("socket closed");
+            }
+
+            socket.onerror = function (err) {
+                console.log("socket error!");
+            }
+
+            socket.onmessage = function (msg) {
+                const message = document.createElement("div");
+                message.innerHTML = msg.data;
+                document.getElementById("messages").append(message);
+                console.log("message", msg);
+            }
+        });
+    </script>
 </head>
 
 <body>
     <h2>Hello world app written in node</h2>
-    <a href="/ui/actuate">click here to actuate</a>
+    <a onclick="actuate()" href="#">click here to actuate</a>
+    <div style="margin-top:20px">
+        <div id="messages"></div>
+    </div>
 </body>
+
+
 
 </html>
