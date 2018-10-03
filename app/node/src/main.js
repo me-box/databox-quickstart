@@ -38,8 +38,9 @@ if (DATABOX_TESTING) {
     });
 } else {
     let helloWorldActuator;
+
     //listen in on the helloWorld Actuator, which we have asked permissions for in the manifest
-    databox.HypercatToSourceDataMetadata("helloWorldActuator").then((data) => {
+    databox.HypercatToSourceDataMetadata(process.env[`DATASOURCE_helloWorldActuator`]).then((data) => {
         helloWorldActuator = data
         return databox.NewTimeSeriesBlobClient(helloWorldActuator.DataSourceURL, false)
     }).then((store) => {
@@ -51,8 +52,6 @@ if (DATABOX_TESTING) {
         console.warn("Error Observing helloWorldActuator", err);
     });
 }
-
-
 
 
 //set up webserver to serve driver endpoints

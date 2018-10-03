@@ -21,7 +21,9 @@
             "name": "hello world package",
             "purpose": "to demo a basic node databox app",
             "required": false,
-            "datastores": [],
+            "datastores": [
+                "helloWorldActuator"
+            ],
             "benefits": "demo of basic func"
         }
     ],
