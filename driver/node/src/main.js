@@ -48,15 +48,17 @@ kvc.RegisterDatasource(helloWorldConfig).then(() => {
     //now register the actuator
     return tsc.RegisterDatasource(helloWorldActuator)
 }).catch((err) => { console.log("error registering helloWorld config datasource", err) }).then(() => {
-    console.log("registered helloWorldActuator");
+    console.log("registered helloWorldActuator, observing", helloWorldActuator.DataSourceID);
     tsc.Observe(helloWorldActuator.DataSourceID, 0)
         .catch((err) => {
             console.log("[Actuation observing error]", err);
         })
         .then((eventEmitter) => {
-            eventEmitter.on('data', (data) => {
-                console.log("[Actuation] data received ", data);
-            });
+            if (eventEmitter) {
+                eventEmitter.on('data', (data) => {
+                    console.log("[Actuation] data received ", data);
+                });
+            }
         })
         .catch((err) => {
             console.log("[Actuation error]", err);

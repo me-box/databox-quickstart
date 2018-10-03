@@ -30,5 +30,8 @@
     "network-permissions": [],
     "resource-requirements": {},
     "volumes": [],
-    "export-whitelist": []
+    "export-whitelist": [],
+    "resource-requirements": {
+        "store": "core-store"
+    }
 }
