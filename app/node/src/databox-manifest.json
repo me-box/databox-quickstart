@@ -21,14 +21,20 @@
             "name": "hello world package",
             "purpose": "to demo a basic node databox app",
             "required": false,
-            "datastores": [
-                "helloWorldActuator"
-            ],
+            "datastores": [],
             "benefits": "demo of basic func"
         }
     ],
     "allowed-combinations": [],
-    "datasources": [],
+    "datasources": [
+        {
+            "type": "helloWorldActuator",
+            "required": true,
+            "name": "helloWorldActuator",
+            "clientid": "helloWorldActuator",
+            "granularities": []
+        }
+    ],
     "network-permissions": [],
     "resource-requirements": {},
     "volumes": [],
