@@ -1,12 +1,11 @@
 FROM node:alpine
 
-RUN apk add --update make gcc g++ python curl git krb5-dev zeromq-dev && \
-    npm install zeromq --zmq-external --save
-
 ADD ./package.json package.json
-RUN npm install
-
-RUN apk del make gcc g++ python curl git krb5-dev
+RUN apk add --update make gcc g++ python curl git krb5-dev zeromq-dev && \
+    npm install zeromq --zmq-external --save && \
+    npm install && \
+    apk del make gcc g++ python curl git krb5-dev
+    
 
 ADD ./main.js main.js
 ADD ./views views
