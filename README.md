@@ -20,7 +20,7 @@ cd databox-quickstart/
 ./testenv/stop.sh
 ```
 
-This will create two docker containers, zest (core-store) and arbiter, which your test code will communicate with to emulate communication with the databox.   To run a basic hello world example, go to the app/driver directory and choose your favoured language we currently support nodejs and golang, though python support is also in the pipeline. Each of the directories contain the instructions you need to compile and run a basic "hello world" app/driver.
+This will create two docker containers, zest (core-store) and arbiter, which your test code will communicate with to emulate communication with the databox.   To run a basic hello world example, go to the app/driver directory and choose your favoured language that we currently support from nodejs or golang, though python support is also in the pipeline. Each of the directories contain the instructions you need to compile and run a basic "hello world" app/driver.
 
 ## Writing a driver
 
