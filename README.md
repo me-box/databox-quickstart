@@ -1,6 +1,6 @@
 ## Databox quick start
 
-This repository is for developers wishing to write drivers and apps for the databox platform.  For more information on databox, see our [project page](http://www.databoxproject.uk/) or [main github repo](https://github.com/me-box/databox)
+This repository is for developers wishing to write drivers and apps for the databox platform.  For more information on databox, see [what is databox](https://github.com/me-box/databox/blob/master/documents/what-is-databox.md) and our [project page](http://www.databoxproject.uk/) or [main github repo](https://github.com/me-box/databox)
 
 ## TLDR
 
@@ -20,7 +20,29 @@ cd databox-quickstart/
 ./testenv/stop.sh
 ```
 
-This will create two docker containers, zest (core-store) and arbiter, which your test code will communicate with to emulate communication with the databox.   To run a basic hello world example, go to the app/driver directory and choose your favoured language that we currently support from nodejs or golang, though python support is also in the pipeline. Each of the directories contain the instructions you need to compile and run a basic "hello world" app/driver.
+This will create two docker containers, zest (a data store) and arbiter, which your test code will communicate with to emulate communication with the databox.  To run a basic hello world example, go to the app/driver directory and choose your favoured language that we currently support from nodejs or golang, though python support is also in the pipeline. Each of the directories contain the instructions you need to compile and run a basic "hello world" app/driver.
+
+## Databox architecture crash course
+
+Overview of the databox architecture:
+
+![databox architecture](https://github.com/tlodge/databox-sdk-tutorial/blob/master/images/overview/databoxoverview.svg)
+
+Databox composes of *data sources*, *data stores*, the *arbiter*, *drivers*, *apps* and *export service*.
+
+* A data source represents a data form either some physical hardware (such as a sensor, an IoT device in the home, e.g. Philips Hue Bulbs, smartplugs) or a cloud service (e.g. Twitter, Facebook, Gmail).
+
+* A driver is a piece of software that is installed on the databox to communicate with a specific device or service to create a set of data sources.
+
+* The arbiter is the keeper od permissions and the minter of tokens. The tokens minted by the arbiter can be independently verified and authenticated by the Data stores. Any component wishing to read or write data must present a valid token with the appropriate permissions.
+
+* Data stores are access controlled and audible database of data sources. They support structured and unstructured time-series data and a key value store. To access data in a store you must have a valid token from the arbiter.
+
+* Apps, are data processors they do not have direct access to drivers or the internet. All they know about is data sources they have access to. All apps have a manifest file, which sets out the data sources it will require access to. At install time, if the user accepts the details of the manifest, then the arbiter will set up the necessary permissions. Apps can also request permission to export data to an external service via the export service.
+
+* The export service allows apps to send data out of databox. Data that passes though it is logs and auditable by the user.
+
+All components in the databox run as docker containers, and it is the container managers job to pull, run and manage their life cycle  containers. Communication between components is also tightly controlled by the databox network, which is beyond the scope of this guide.
 
 ## Writing a driver
 
@@ -65,3 +87,14 @@ docker tag [myimagename] databoxsystems/[myimagename]-amd64:0.5.0
 ```
 
 5.  Finally, you'll need to upload your manifest file to tell databox about the new app/driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the bottom of the page, use the form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see it ready to install.
+
+## Useful docker commands
+
+| Live | Dev Env | Description |
+| --- | --- | --- |
+| `docker service logs [app-name] ` | `N/A` | View app/driver logs |
+| `docker service logs arbiter` | `docker logs arbiter` | view the arbiter logs|
+| `docker service logs [app-name]-core-store` | `docker logs zest` | view the store logs|
+| `docker ps` | `docker ps` | check which containers are running|
+| `docker service ps` | `N/A` | check which services are running|
+| `docker service ps -a [app-name] ` | `N/A` | for debugging service start-up problems if docker docker service logs is empty|
