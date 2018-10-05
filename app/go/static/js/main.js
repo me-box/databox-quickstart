@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
  });
 
 function getData() {
-    fetch('/ui/getData', {
+    fetch('./ui/getData', {
                     method: "GET",
                     credentials: "include",
                     mode: "cors",
@@ -22,6 +22,6 @@ function getData() {
                     }
                 })
                 .catch((error) => {
-                    console.log("Error getting data, ", error)
+                    console.log("Error getting data,  ", error)
                 })
 }

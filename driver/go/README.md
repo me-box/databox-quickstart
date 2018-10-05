@@ -14,6 +14,7 @@ If go version is less than 1.11 then:
 ../../testenv/start.sh
 make start
 ```
+the ui will be available at http://127.0.0.1:8080/go-test-driver/ui
 
 ## Running on databox
 

@@ -52,7 +52,7 @@ func main() {
 	} else {
 		//This is the standard setup for inside databox
 		var err error
-		testDataSource, storeEndpoint, err = libDatabox.HypercatToDataSourceMetadata(os.Getenv("DATASOURCE_TESTDATA"))
+		testDataSource, storeEndpoint, err = libDatabox.HypercatToDataSourceMetadata(os.Getenv("DATASOURCE_testdata"))
 		libDatabox.ChkErr(err)
 		// Set up a store client you will need one of these per store
 		// if you asked for more then one data source in your manifest
