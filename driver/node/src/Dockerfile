@@ -5,10 +5,13 @@ RUN apk add --update nodejs npm make gcc g++ python curl git krb5-dev zeromq-dev
     npm install zeromq --zmq-external --save && \
     npm install && \
     apk del make gcc g++ python curl git krb5-dev
-    
+
 
 ADD ./main.js main.js
 ADD ./views views
+
+RUN addgroup -S databox && adduser -S -g databox databox
+USER databox
 
 LABEL databox.type="app"
 LABEL databox.manifestURL="/helloworld-node-driver/databox-manifest.json"
