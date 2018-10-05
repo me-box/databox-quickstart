@@ -36,7 +36,7 @@ func main() {
 		//turn on debug output for the databox library
 		libDatabox.OutputDebug(true)
 	} else {
-		DataboxStoreEndpoint = os.Getenv("DATABOX_STORE_ENDPOINT")
+		DataboxStoreEndpoint = os.Getenv("DATABOX_ZMQ_ENDPOINT")
 		storeClient = libDatabox.NewDefaultCoreStoreClient(DataboxStoreEndpoint)
 	}
 
@@ -64,7 +64,7 @@ func doDriverWork(testMode bool, storeClient *libDatabox.CoreStoreClient) {
 		Description:    "A test datasource",        //required
 		ContentType:    libDatabox.ContentTypeJSON, //required
 		Vendor:         "databox-test",             //required
-		DataSourceType: "testData",                 //required
+		DataSourceType: "databox-test:testdata",    //required
 		DataSourceID:   "testdata1",                //required
 		StoreType:      libDatabox.StoreTypeTSBlob, //required
 		IsActuator:     false,
