@@ -6,8 +6,6 @@ var databox = require("node-databox");
 
 const DATABOX_ZMQ_ENDPOINT = process.env.DATABOX_ZMQ_ENDPOINT || "tcp://127.0.0.1:5555";
 const DATABOX_TESTING = !(process.env.DATABOX_VERSION);
-
-const credentials = databox.getHttpsCredentials();
 const PORT = process.env.port || '8080';
 
 //create a timeseries blob client for communicating with the timeseries store
@@ -113,5 +111,6 @@ if (DATABOX_TESTING) {
     http.createServer(app).listen(PORT);
 } else {
     console.log("[Creating https server]", PORT);
+    const credentials = databox.getHttpsCredentials();
     https.createServer(credentials, app).listen(PORT);
 }
