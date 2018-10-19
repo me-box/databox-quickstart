@@ -7,36 +7,25 @@
     "licence": "MIT",
     "databox-type": "app",
     "tags": [
-        "test",
-        "hello world"
+    "test",
+    "hello world"
     ],
     "homepage": "https://github.com/me-box/databox-quickstart",
     "repository": {
-        "type": "git",
-        "url": "git+https://github.com/me-box/databox-quickstart.git"
+    "type": "git",
+    "url": "git+https://github.com/me-box/databox-quickstart.git"
     },
-    "packages": [
-        {
-            "id": "databox-helloworld-package",
-            "name": "hello world package",
-            "purpose": "to demo a basic node databox app",
-            "required": false,
-            "datastores": [],
-            "benefits": "demo of basic func"
-        }
-    ],
-    "allowed-combinations": [],
     "datasources": [
-        {
-            "type": "helloWorldActuator",
-            "required": true,
-            "name": "helloWorldActuator",
-            "clientid": "helloWorldActuator",
-            "granularities": []
-        }
+    {
+    "type": "helloWorldActuator",
+    "required": true,
+    "name": "helloWorldActuator",
+    "clientid": "helloWorldActuator",
+    "granularities": []
+    }
     ],
     "network-permissions": [],
     "resource-requirements": {},
     "volumes": [],
     "export-whitelist": []
-}
+    }

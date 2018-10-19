@@ -19,18 +19,6 @@
 		"type": "git",
 		"url": "git+https://github.com/me-box/databox-quickstart/"
 	},
-
-	"packages": [
-		{
-			"name": "Test",
-			"purpose": "Display the data from the test driver",
-			"install": "required",
-			"risks": "None.",
-			"benefits": "You can see the data the driver has written!",
-			"datastores": ["testdata"]
-		}
-	],
-	"allowed-combinations":[ ],
 	"datasources": [
 		{
 			"type": "databox-test:testdata",

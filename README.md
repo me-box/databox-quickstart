@@ -77,13 +77,13 @@ These instructions assume you have a working databox.  If you do not, please rea
 4. Name your image so that databox can find it.  By default databox searches for its images at databoxsystems (this is configurable but we'll ignore this for now).  Databox also uses a naming scheme as follows: appname-[architecture]:version. For example if you have an app called myapp, running version 0.5.1 on an 64bit x86-based machine then your image will need to be called:
 
 ```
-databoxsystems/myapp-amd64:0.5.0
+databoxsystems/myapp-amd64:0.5.1
 ```
 
 to tag your image correctly, simply do the following:
 
 ```
-docker tag [myimagename] databoxsystems/[myimagename]-amd64:0.5.0
+docker tag [myimagename] databoxsystems/[myimagename]-amd64:0.5.1
 ```
 
 5.  Finally, you'll need to upload your manifest file to tell databox about the new app/driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the bottom of the page, use the form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see it ready to install.
