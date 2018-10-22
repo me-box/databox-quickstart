@@ -15,23 +15,19 @@
         "type": "git",
         "url": "git+https://github.com/me-box/databox-quickstart.git"
     },
-    "packages": [
-        {
-            "id": "databox-helloworld-package",
-            "name": "hello world package",
-            "purpose": "to demo a basic node databox driver",
-            "required": false,
-            "datastores": [],
-            "benefits": "demo of basic func"
-        }
-    ],
-    "allowed-combinations": [],
     "datasources": [],
     "network-permissions": [],
     "resource-requirements": {},
-    "volumes": [],
     "export-whitelist": [],
     "resource-requirements": {
         "store": "core-store"
-    }
+    },
+    "provides": [
+		{
+			"data-source-type": "helloWorldActuator",
+			"description": "hello world actuator",
+			"store-type": "ts",
+			"schema": {}
+        }
+    ]
 }

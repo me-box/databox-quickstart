@@ -22,6 +22,14 @@
 
 	"resource-requirements": {
 		"store": "core-store"
-	}
+	},
 
+    "provides": [
+		{
+			"data-source-type": "databox-test:testdata",
+			"description": "A test data source",
+			"store-type": "ts",
+			"schema": {}
+        }
+    ]
 }
