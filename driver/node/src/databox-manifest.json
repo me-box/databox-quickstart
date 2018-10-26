@@ -25,11 +25,11 @@
         "store": "core-store"
     },
     "provides": [
-		{
-			"data-source-type": "helloWorldActuator",
-			"description": "hello world actuator",
-			"store-type": "ts",
-			"schema": {}
+        {
+            "data-source-type":"helloWorldActuator",
+            "description": "hello world actuator",
+            "store-type":"kv",
+            "schema":{}   
         }
     ]
 }
