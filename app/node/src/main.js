@@ -23,6 +23,10 @@ const listenToActuator = (emitter) => {
         console.log("seen data from the hello world actuator!", JSON.parse(data.data));
         if (ws) {
             ws.send(data.data);
+            databox.export.longpoll('https://export.amar.io/', data.data)
+            .catch((err) => {
+                console.log("[error] export.longpoll ", err)
+            })
         }
     });
 

@@ -30,5 +30,10 @@
     "network-permissions": [],
     "resource-requirements": {},
     "volumes": [],
-    "export-whitelist": []
+    "export-whitelist": [
+		{
+		  "url": "https://export.amar.io/",
+		  "description": "Exports the data to amar.io"
+		}
+	  ]
     }
