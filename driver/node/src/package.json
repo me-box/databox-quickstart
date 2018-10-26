@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --max-old-space-size=128 main.js",
-    "docker": "docker build -t databox-driver-helloworld-node ."
+    "docker": "docker build -t databoxdev/databox-driver-helloworld-node-amd64:latest ."
   },
   "author": "Databox Inc",
   "license": "MIT",
@@ -16,6 +16,6 @@
     "express": "^4.16.3",
     "http": "0.0.0",
     "https": "^1.0.0",
-    "node-databox": "^0.8.3"
+    "node-databox": "^0.9.0"
   }
 }

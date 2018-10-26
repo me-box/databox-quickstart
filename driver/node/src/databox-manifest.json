@@ -1,6 +1,8 @@
 {
     "manifest-version": 1,
     "name": "databox-driver-helloworld-node",
+    "docker-registry":"databoxdev",
+	"docker-image-tag":"latest",
     "version": "0.1.0",
     "description": "basic node hello world driver",
     "author": "Databox Inc.",

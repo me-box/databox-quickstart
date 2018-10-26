@@ -1,6 +1,9 @@
 {
     "manifest-version": 1,
     "name": "databox-app-helloworld-node",
+    "docker-registry":"databoxdev",
+	"docker-image-tag":"latest",
+	"databox-type": "app",
     "version": "0.1.0",
     "description": "basic node hello world app",
     "author": "Databox Inc.",
