@@ -64,12 +64,26 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/status", statusEndpoint).Methods("GET")
 	router.HandleFunc("/ui/getData", getData(testDataSource, storeClient)).Methods("GET")
+	router.HandleFunc("/ui/crash", crashApp).Methods("GET")
+	router.HandleFunc("/ui/qstest", qstest).Methods("GET")
 	router.PathPrefix("/ui").Handler(http.StripPrefix("/ui", http.FileServer(http.Dir("./static"))))
 
 	//setup webserver
 	setUpWebServer(DataboxTestMode, router, httpServerPort)
 
 	libDatabox.Info("Exiting ....")
+}
+
+func qstest(w http.ResponseWriter, r *http.Request) {
+	libDatabox.Info(r.URL.Path)
+	libDatabox.Info(r.URL.RawPath)
+	libDatabox.Info(r.URL.RawQuery)
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("active\n"))
+}
+
+func crashApp(w http.ResponseWriter, r *http.Request) {
+	os.Exit(2)
 }
 
 func statusEndpoint(w http.ResponseWriter, r *http.Request) {

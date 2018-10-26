@@ -1,6 +1,6 @@
 IMAGE_NAME=go-test-driver
-DEFAULT_REG=toshbrown
-VERSION=latest
+DEFAULT_REG=databoxdev
+VERSION=dev
 
 .PHONY: all
 all: build-amd64 build-arm64v8 publish-images
