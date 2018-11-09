@@ -6,7 +6,7 @@ This repository is for developers wishing to write drivers and apps for the data
 
 This repo contains all you need to create and test apps and drivers outside of the databox platform.  The only dependency that it has is an installation of Docker.  Note that this guide assumes that your base platform is MacOS or a flavour of linux - we do not current support development on Windows. Instruction on setting up docker can be found [on the docker website](https://docs.docker.com/install/#supported-platforms)
 
-To simplify the development workflow, we have created a script that will set up a test environment to run your apps and drivers against. This allows you to test your code without having to build it as a docker container and install it on the platform.  Once you have a version you are happy with you can test it on the databox platform by following the instructions [here][Running on the databox platform]
+To simplify the development workflow, we have created a script that will set up a test environment to run your apps and drivers against. This allows you to test your code without having to build it as a docker container and install it on the platform.  Once you have a version you are happy with you can test it on the databox platform by following the instructions [here](#testing-on-the-databox-platform)
 
 To start the test environment, run
 ```
