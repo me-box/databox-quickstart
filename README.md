@@ -30,19 +30,19 @@ Overview of the databox architecture:
 
 Databox composes of *data sources*, *data stores*, the *arbiter*, *drivers*, *apps* and *export service*.
 
-* A data source represents a data form either some physical hardware (such as a sensor, an IoT device in the home, e.g. Philips Hue Bulbs, smartplugs) or a cloud service (e.g. Twitter, Facebook, Gmail).
+* A data source represents data from either some physical hardware (such as a sensor, an IoT device in the home, e.g. Philips Hue Bulbs, smartplugs) or a cloud service (e.g. Twitter, Facebook, Gmail).
 
 * A driver is a piece of software that is installed on the databox to communicate with a specific device or service to create a set of data sources.
 
-* The arbiter is the keeper od permissions and the minter of tokens. The tokens minted by the arbiter can be independently verified and authenticated by the Data stores. Any component wishing to read or write data must present a valid token with the appropriate permissions.
+* The arbiter is the keeper of permissions and the minter of tokens. The tokens minted by the arbiter can be independently verified and authenticated by the Data stores. Any component wishing to read or write data must present a valid token with the appropriate permissions.
 
-* Data stores are access controlled and audible database of data sources. They support structured and unstructured time-series data and a key value store. To access data in a store you must have a valid token from the arbiter.
+* Data stores are access controlled and auditable database of data sources. They support structured and unstructured time-series data and a key-value store. To access data in a store you must have a valid token from the arbiter.
 
 * Apps, are data processors they do not have direct access to drivers or the internet. All they know about is data sources they have access to. All apps have a manifest file, which sets out the data sources it will require access to. At install time, if the user accepts the details of the manifest, then the arbiter will set up the necessary permissions. Apps can also request permission to export data to an external service via the export service.
 
-* The export service allows apps to send data out of databox. Data that passes though it is logs and auditable by the user.
+* The export service allows apps to send data out of databox. Data that passes though it is logged and auditable by the user.
 
-All components in the databox run as docker containers, and it is the container managers job to pull, run and manage their life cycle  containers. Communication between components is also tightly controlled by the databox network, which is beyond the scope of this guide.
+All components in the databox run as docker containers, and it is the container managers job to pull, run and manage their life cycle containers. Communication between components is also tightly controlled by the databox network, which is beyond the scope of this guide.
 
 ## Writing a driver
 
@@ -61,11 +61,11 @@ They will also typically contain logic that will:
 4.  Provide the logic for connecting to a service or device OR provide an endpoint for actuating a device.
 5.  Read/Write data to its stores.
 
-Steps 1 & 2 & 5 are most easily accomplished though use of the databox libraries.  It is possible to write components without the using the libraries, though this will require use a socket for writing binary data that conforms to our proprietary binary zeromq protocol (details can be found [here](https://me-box.github.io/zestdb/)).
+Steps 1 & 2 & 5 are most easily accomplished though use of the databox libraries.  It is possible to write components without the using the libraries, although this will require use of a socket for writing binary data that conforms to our proprietary binary zeromq protocol (details can be found [here](https://me-box.github.io/zestdb/)).
 
 ## Writing an app
 
-The process for writing an app is not to dissimilar from writing a driver, however, apps are untrusted code, and are therefore more restricted.  In particular they can only communicate with stores, and they are restricted to opening a port on 8080, to provide a web interface. Apps CANNOT directly access external addresses.  If they wish to do so, they must be defined explicitly in the manifest and must use the databox's export service.
+The process for writing an app is not too dissimilar from writing a driver, however, apps are untrusted code, and are therefore more restricted.  In particular they can only communicate with stores, and they are restricted to opening a port on 8080, to provide a web interface. Apps CANNOT directly access external addresses.  If they wish to do so, they must be defined explicitly in the manifest and must use the databox's export service.
 
 ## Testing on the databox platform
 
