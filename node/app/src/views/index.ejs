@@ -60,6 +60,9 @@
 
             socket.onclose = function () {
                 console.log("socket closed");
+                //if the ws is closed then refresh to reconect
+                //this gives live ui reload ;-) in the dev image
+                setTimeout(() => { window.location.reload(); }, 2000);
             }
 
             socket.onerror = function (err) {
@@ -74,11 +77,20 @@
             }
         });
     </script>
+    <style>
+        body {
+            font-size: 1.5em
+        }
+
+        button {
+            font-size: .7em
+        }
+    </style>
 </head>
 
 <body>
     <h2>Hello world app written in node</h2>
-    <a onclick="actuate()" href="#">click here to actuate</a>
+    <button onclick="actuate()" href="#">click here to actuate</button>
     <div style="margin-top:20px">
         <div id="messages"></div>
     </div>

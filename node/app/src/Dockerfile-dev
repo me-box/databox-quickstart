@@ -1,0 +1,23 @@
+FROM amd64/alpine:3.8
+
+
+WORKDIR /opt
+RUN addgroup -S databox && adduser -S -g databox databox && \
+apk --no-cache add build-base pkgconfig nodejs npm libzmq zeromq-dev libsodium-dev python  && \
+npm install zeromq@4.6.0 --zmq-external --verbose
+
+#globally install node packages and add to path
+ADD ./package.json package.json
+RUN npm install -g
+RUN npm install -g nodemon
+ENV PATH /opt/node_modules/.bin:$PATH
+ENV NODE_PATH /opt/node_modules
+
+USER databox
+WORKDIR /src
+
+LABEL databox.type="app"
+
+EXPOSE 8080
+
+CMD ["npm","run","start-dev"]

@@ -1,0 +1,35 @@
+{
+  "name": "helloworld-node-app",
+  "databoxVersion": "0.5.2",
+  "databoxRepository": "databoxsystems",
+  "databoxPassword": "databoxDev",
+  "databoxDevSrcMnt": "[{\"ContName\":\"helloworld-node-app\",\"ContSrcPath\":\"/src\",\"HostSrcPath\":\"/Users/tosh/Projects/me-box/databox-quickstart/app/node/src\"}]",
+  "version": "1.0.0",
+  "description": "databox",
+  "main": "main.js",
+  "scripts": {
+    "//": "start runs you app outside databox for testing locally",
+    "start": "../../testenv/start.sh && /docker run --rm -v ${INIT_CWD}:/src -p 8090:8090 -it databoxdev/${npm_package_name}-amd64:dev",
+    "echo": "echo ${npm_package_name}; echo ${INIT_CWD} ${npm_package_databoxDevSrcMnt}",
+    "//": "start-prod is used to start this app in a production databox install",
+    "start-prod": "node --max-old-space-size=128 main.js",
+    "//": "start-dev is used to start this app if its installed on to a databox with a :dev tag",
+    "start-dev": "nodemon -L -e js,ejs --max-old-space-size=128 main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "docker build -t databoxdev/${npm_package_name}-amd64:${npm_package_databoxVersion} .",
+    "build-dev": "docker build -t databoxdev/${npm_package_name}-amd64:dev -f Dockerfile-dev . && rm -rf  /tmp/${npm_package_name} && ln -s ${INIT_CWD} /tmp/${npm_package_name}",
+    "start-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox start -sslHostName `hostname` --devmount=${npm_package_databoxDevSrcMnt} --release=${npm_package_databoxVersion} --password=${npm_package_databoxPassword}",
+    "stop-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox stop"
+  },
+  "author": "Databox Inc",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "node-databox": "0.9.0",
+    "ws": "^6.0.0"
+  }
+}
