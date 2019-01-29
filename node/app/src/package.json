@@ -17,6 +17,7 @@
     "start-dev": "nodemon -L -e js,ejs --max-old-space-size=128 main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "docker build -t ${npm_package_databoxRepository}/${npm_package_name}-amd64:${npm_package_databoxVersion} .",
+    "build-dev": "docker build -t ${npm_package_databoxRepository}/${npm_package_name}-amd64:${npm_package_databoxVersion} -f Dockerfile-dev.",
     "start-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox start -sslHostName `hostname` --devmount=${npm_package_databoxDevSrcMnt} --release=${npm_package_databoxVersion} --password=${npm_package_databoxPassword}",
     "stop-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox stop"
   },
