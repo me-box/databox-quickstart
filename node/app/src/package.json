@@ -20,7 +20,8 @@
     "build-dev": "docker build -t ${npm_package_databoxRepository}/${npm_package_name}-amd64:${npm_package_databoxVersion} -f Dockerfile-dev .",
     "start-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox start -sslHostName `hostname` --devmount=${npm_package_databoxDevSrcMnt} --release=${npm_package_databoxVersion} --password=${npm_package_databoxPassword}",
     "stop-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox stop",
-    "upload-manifest": "curl -sL --cookie-jar /tmp/databox-jar -H 'authorization:Token ${UI_AUTH_TOKEN}' --insecure --http1.1 -w '%{http_code}\n' 'https://127.0.0.1/api/connect' -o /dev/null"
+    "wipe-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox wipe -y ",
+    "upload-manifest": "curl -sL --cookie-jar /tmp/databox-jar -H \"authorization:Token ${npm_package_databoxPassword}\" --insecure --http1.1 -w \"%{http_code}\\n\" https://127.0.0.1/api/connect -o /dev/null; curl -s  --insecure --http1.1 --cookie /tmp/databox-jar -H 'Content-Type: application/json' -X POST -d @databox-manifest.json -L 'https://127.0.0.1/app-store/ui/api/addManifest'"
   },
   "author": "Databox Inc",
   "license": "MIT",
