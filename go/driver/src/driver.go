@@ -17,7 +17,7 @@ const testArbiterEndpoint = "tcp://127.0.0.1:4444"
 const testStoreEndpoint = "tcp://127.0.0.1:5555"
 
 func main() {
-	libDatabox.Info("Starting ....")
+	libDatabox.Info("Starting .....")
 
 	//Are we running inside databox?
 	DataboxTestMode := os.Getenv("DATABOX_VERSION") == ""
@@ -86,7 +86,7 @@ func doDriverWork(testMode bool, storeClient *libDatabox.CoreStoreClient) {
 		if err != nil {
 			libDatabox.Err("Error Write Datasource " + err.Error())
 		}
-		libDatabox.Info("Data written to store: " + jsonData)
+		libDatabox.Info("Data written to store testing: " + jsonData)
 		time.Sleep(time.Second * 1)
 	}
 }

@@ -86,3 +86,5 @@ typings/
 *.out
 
 \.DS_Store
+
+go/driver/bin/
