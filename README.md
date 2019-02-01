@@ -6,7 +6,7 @@ This repository is for developers wishing to write drivers and apps for the data
 
 This repo contains all you need to create and test apps and drivers outside of the databox platform.  The only dependency that it has is an installation of Docker.  Note that this guide assumes that your base platform is MacOS or a flavour of linux - we do not current support development on Windows. Instruction on setting up docker can be found [on the docker website](https://docs.docker.com/install/#supported-platforms)
 
-To simplify the development workflow, we have created a script that will set up a test environment to run your apps and drivers against. This allows you to test your code without having to build it as a docker container and install it on the platform.  Once you have a version you are happy with you can test it on the databox platform by following the instructions [here](#testing-on-the-databox-platform)
+To simplify the development workflow, we have created a script that will set up a test environment outside to run your apps and drivers against and a method to run them inside databox and mount code from the local host. This allows you to test your code without having to build it as a docker container and install it on the platform.  Once you have a version you are happy with you can test it on the databox platform by following the instructions [here](#testing-on-the-databox-platform)
 
 To start the test environment, run
 ```
@@ -20,7 +20,7 @@ cd databox-quickstart/
 ./testenv/stop.sh
 ```
 
-This will create two docker containers, zest (a data store) and arbiter, which your test code will communicate with to emulate communication with the databox.  To run a basic hello world example, go to the app/driver directory and choose your favoured language that we currently support from nodejs or golang, though python support is also in the pipeline. Each of the directories contain the instructions you need to compile and run a basic "hello world" app/driver.
+This will create two docker containers, zest (a data store) and arbiter, which your test code will communicate with to emulate communication with the databox.  To run a basic hello world example, go to the app/driver directory with in then language of your choice, we currently support from nodejs or golang, though python support is also in the pipeline. Each of the directories contain the instructions you need to compile and run a basic "hello world" app/driver.
 
 ## Databox architecture crash course
 
@@ -46,7 +46,7 @@ All components in the databox run as docker containers, and it is the container 
 
 ## Writing a driver
 
-A databox driver is responsible for writing data to a datastore to make it available for apps.  Drivers are privileged code, so have unrestricted access to external addresses/ports.  We assume, in most cases that a databox will not have a externally accessible static IP address, so the typical approach is to require that drivers initiate communication to a datasource to gather data (rather than assuming the driver exposes a defined endpoint for datasources to connect to).
+A databox driver is responsible for writing data to a datastore to make it available for apps.  Drivers are privileged code, so have unrestricted access to the local network and can request external access in their manifests (using the ExternalWhitelist).  We assume, in most cases that a databox will not have a externally accessible static IP address, so the typical approach is to require that drivers initiate communication to a datasource to gather data (rather than assuming the driver exposes a defined endpoint for datasources to connect to).
 
 Drivers (like apps) are written as webapps; user interaction with a driver is through a web interface; the top-level route for a driver is /ui, i.e. on the databox, when a user selects a driver, its webpage will be served from /ui.  Any additional rest endpoints must be under /ui (e.g. /ui/getConfig, /ui/setConfig).  Drivers also have a manifest file, which must be written before it can be installed on a databox, but can be ignored for testing purposes. Details of the format of the manifest can be found [here][Running on the databox platform].  Each of the sample apps in this repo have a databox-manifest.json file which will probably be sufficient to get an idea of what is required.
 
@@ -65,7 +65,7 @@ Steps 1 & 2 & 5 are most easily accomplished though use of the databox libraries
 
 ## Writing an app
 
-The process for writing an app is not too dissimilar from writing a driver, however, apps are untrusted code, and are therefore more restricted.  In particular they can only communicate with stores, and they are restricted to opening a port on 8080, to provide a web interface. Apps CANNOT directly access external addresses.  If they wish to do so, they must be defined explicitly in the manifest and must use the databox's export service.
+The process for writing an app is not too dissimilar from writing a driver, however, apps are untrusted code, and are therefore more restricted.  In particular they can only communicate with stores, and they are restricted to opening a port on 8080, to provide a web interface. Apps CANNOT directly access external addresses or the local network.  If they wish to access external addresses apps must defined this explicitly in the manifest (in the ExportWhitelists) and must use the databox's export service.
 
 ## Testing on the databox platform
 
@@ -86,15 +86,19 @@ to tag your image correctly, simply do the following:
 docker tag [myimagename] databoxsystems/[myimagename]-amd64:0.5.1
 ```
 
-5.  Finally, you'll need to upload your manifest file to tell databox about the new app/driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the bottom of the page, use the form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see it ready to install.
+5.  Finally, you'll need to upload your manifest file to tell databox about the new app/driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the top right, use the gear icon to acsess the app store settings form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see it ready to install.
+
+The build scripts in the included examples have a number of commands to help with this process, see their README.md's for more details.
 
 ## Useful docker commands
 
+Here are some docker commands that help you see what is happening on the databox platform.
+
 | Live | Dev Env | Description |
 | --- | --- | --- |
-| `docker service logs [app-name] ` | `N/A` | View app/driver logs |
+| `docker service logs [app-name] ` | `N/A` | View app/driver console output  |
 | `docker service logs arbiter` | `docker logs arbiter` | view the arbiter logs|
-| `docker service logs [app-name]-core-store` | `docker logs zest` | view the store logs|
+| `docker service logs [app-name]-core-store` | `docker logs zest` | view the store logs when running the test env|
 | `docker ps` | `docker ps` | check which containers are running|
 | `docker service ps` | `N/A` | check which services are running|
 | `docker service ps -a [app-name] ` | `N/A` | for debugging service start-up problems if docker docker service logs is empty|

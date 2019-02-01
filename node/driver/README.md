@@ -1,6 +1,6 @@
 ## Writing a driver in node
 
-This driver will write a value to the key value store and then access it when the page is refreshed.  To get started, first ensure that your are running the test environment (i.e. you have called [home]/databox-quickstart/testenv/start.sh). Then run:
+This driver will write a value to the key value store and then access it when the page is refreshed.  To get started, run:
 
 ```
 cd src
@@ -8,34 +8,67 @@ npm install
 npm start
 ```
 
-Then go to http://127.0.0.1:8080.  In the input box type some text and hit update.  Now refresh the page and you should see a statement "current config is: [your text]".  This means the driver has successfully set up a store to read/write to.    
+This will start the test environment and start your code outside of databox for testing.
 
-## Running on databox
+Then go to http://127.0.0.1:8080.  In the input box type some text and hit update.  Now refresh the page and you should see a statement "current config is: [your text]".  This means the driver has successfully set up a store to read/write to.
 
-To get running on the databox, you will first need to create a docker container to run your code.  To do this, you can either build the container on your databox, so pull your code, then in the src directory type:
+## Running on databox in dev mode
 
-```
-npm run docker
-```
+Databox supports starting a development version of your container with the source code mounted from you hosts filesystem. This is particularly usefully for complex apps that use multiple drivers, as they are hard to test externally. To do this we use the --devmount option of the databox command. The databoxDevSrcMnt variable at the top of the package.json holds the configuration json string for this.
 
-Or you could push the container image to a docker repository (e.g dockerhub), then pull it onto the databox.  So do the following:
+>> **You will need to correct the path in databoxDevSrcMnt in package.json before this will work (set it to pwd).**
 
 ```
-npm run docker
-docker tag [dockerhubusername]/databox-driver-helloworld-node
-docker push [dockerhubusername]/databox-driver-helloworld-node
+npm run build-dev           # Builds a dev image using the Dockerfile-dev (adds nodemon and npm_modules outside of the src path)
+npm run start-databox-dev   # Starts a local copy of databox with --devmount set to point to the code here also setts the password to databoxDev
+
+# wait for databox to start go to http://127.0.0.1 install the https certificate and then go to https://127.0.0.1
 ```
 
-Once your image is on the databox, you need to name it so that it can be found by the container manager.  By default the container manager looks for containers in databoxsystems.  Assuming you are running version 0.5.1 on an Intel 64 bit machine, do the following to rename your image:
+Finally, you'll need to upload your manifest file to tell databox about the new driver.
 
 ```
-docker tag [dockerhubusername]/databox-driver-helloworld-node databoxsystems/databox-driver-helloworld-node-amd64:0.5.1
+npm run upload-manifest     # Adds the databox manifest for this driver to databox
 ```
 
-or if you are running the latest bleeding-edge version of the platform you can do:
+After this go to https://127.0.0.1 login and navigate to the app store where you should be able to see the driver ready to install.
+Once installed you can edit the code on your host and changes should be visible to the running databox driver and nodemon will restart as required.
+
+Databox maintains state between restarts so uploading the manifest and reinstalling is not always necessary between restarts.
+If you make changes to the manifest this must be reuploaded and the driver reinstalled.
+
+
+## Running on databox in production mode
+
+To get running on the databox, you will first need to create a docker container to run your code.  To do this, in the src directory type:
 
 ```
-docker tag [dockerhubusername]/databox-driver-helloworld-node databoxsystems/databox-driver-helloworld-node-amd64
+npm run build-prod       # Builds a production image using the Dockerfile
+npm run start-databox   # Starts a local copy of databox and sets the password to databoxDev
+
+# wait for databox to start go to http://127.0.0.1 install the https certificate and then go to https://127.0.0.1
+
 ```
 
-Finally, you'll need to upload your manifest file to tell databox about the new driver.  Log in to the databox and navigate to My Apps, then click on the "app store" app.  At the bottom of the page, use the form to upload your manifest.  Once uploaded, you can navigate to "App Store" and you should see databox-driver-helloworld-node ready to install. 
+Finally, you'll need to upload your manifest file to tell databox about the new driver.
+
+```
+npm run upload-manifest     # Adds the databox manifest for this driver to databox
+```
+
+In this mode if you make changes to the code you must run `npm run build-prod` and restart the driver using the restart icon in the top left of the ui.
+If you make changes to the manifest this must be reuploaded and the driver reinstalled.
+
+# Stopping and resetting databox
+
+To stop databox run:
+
+```
+npm run stop-databox
+```
+
+To completely reset databox run:
+
+```
+npm run wipe-databox
+```
