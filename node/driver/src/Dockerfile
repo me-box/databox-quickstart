@@ -19,4 +19,4 @@ LABEL databox.type="driver"
 
 EXPOSE 8080
 
-CMD ["npm","start"]
+CMD ["npm","run","start-prod"]

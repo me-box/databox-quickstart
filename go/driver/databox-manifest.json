@@ -1,13 +1,11 @@
 {
 	"manifest-version": 1,
-
 	"name": "go-test-driver",
-	"docker-image":"go-test-driver",
-	"docker-registry":"databoxdev",
-	"docker-image-tag":"dev",
+	"docker-image": "go-test-driver",
+	"docker-registry": "databoxsystems",
+	"docker-image-tag": "0.5.2",
 	"databox-type": "driver",
-	"version": "0.5.0",
-
+	"version": "0.1.0",
 	"description": "An driver that shows how to write a basic go driver.",
 	"author": "Tosh Brown <Anthony.Brown@nottingham.ac.uk>",
 	"license": "MIT",
@@ -16,23 +14,20 @@
 		"driver",
 		"databox"
 	],
-
 	"homepage": "https://github.com/me-box/databox-quickstart/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/me-box/databox-quickstart/"
 	},
-
 	"resource-requirements": {
 		"store": "core-store"
 	},
-
-    "provides": [
+	"provides": [
 		{
 			"data-source-type": "databox-test:testdata",
 			"description": "A test data source",
 			"store-type": "ts",
 			"schema": {}
-        }
-    ]
+		}
+	]
 }

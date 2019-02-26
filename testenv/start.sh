@@ -1,8 +1,12 @@
 #!/bin/sh
 echo "Starting databox test env"
 
-docker kill zest
-docker kill arbiter
+RUNNING=$(docker inspect -f "{{.State.Running}}" zest)
+if [ "$RUNNING" == "true" ]
+then
+  echo "DEV env already started!"
+  exit 0
+fi
 
 ZEST_IMAGE_VERSION="jptmoore/zest:v0.1.0"
 ARBITER_IMAGE_VERSION="jptmoore/arbiter:latest"

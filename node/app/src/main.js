@@ -5,11 +5,11 @@ var bodyParser = require("body-parser");
 var databox = require("node-databox");
 var WebSocket = require("ws");
 
-const DATABOX_ZMQ_ENDPOINT = /*process.env.DATABOX_ZMQ_ENDPOINT ||*/ "tcp://127.0.0.1:5555";
+const DATABOX_ZMQ_ENDPOINT = process.env.DATABOX_ZMQ_ENDPOINT || "tcp://127.0.0.1:5555";
 const DATABOX_TESTING = !(process.env.DATABOX_VERSION);
-const PORT = DATABOX_TESTING ? 8090 : process.env.port || '8080';
+const PORT = DATABOX_TESTING ? 8090 : process.env.PORT || '8080';
 
-//this will ref the timeseriesblob client which will observe and write to the databoxactuator (created in the driver)
+//this will ref the timeseriesblob client which will observe and write to the databox actuator (created in the driver)
 let tsc;
 
 //server and websocket connection;
@@ -24,9 +24,9 @@ const listenToActuator = (emitter) => {
         if (ws) {
             ws.send(data.data);
             databox.export.longpoll('https://export.amar.io/', data.data)
-            .catch((err) => {
-                console.log("[error] export.longpoll ", err)
-            })
+                .catch((err) => {
+                    console.log("[error] export.longpoll ", err)
+                })
         }
     });
 
@@ -76,7 +76,7 @@ app.get("/ui", function (req, res) {
 app.get('/ui/actuate', (req, res) => {
 
     return new Promise((resolve, reject) => {
-        tsc.Write("helloWorldActuator", { msg: `${Date.now()}:databox actuation event` }).then(() => {
+        tsc.Write("helloWorldActuator", { msg: `${Date.now()}: databox actuation event` }).then(() => {
             console.log("successfully actuated!");
             resolve();
         }).catch((err) => {

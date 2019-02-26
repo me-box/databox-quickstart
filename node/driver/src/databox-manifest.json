@@ -1,8 +1,8 @@
 {
     "manifest-version": 1,
-    "name": "databox-driver-helloworld-node",
-    "docker-registry":"databoxdev",
-	"docker-image-tag":"latest",
+    "name": "driver-helloworld-node",
+    "docker-registry": "databoxsystems",
+    "docker-image-tag": "0.5.2",
     "version": "0.1.0",
     "description": "basic node hello world driver",
     "author": "Databox Inc.",
@@ -26,10 +26,10 @@
     },
     "provides": [
         {
-            "data-source-type":"helloWorldActuator",
+            "data-source-type": "helloWorldActuator",
             "description": "hello world actuator",
-            "store-type":"kv",
-            "schema":{}   
+            "store-type": "kv",
+            "schema": {}
         }
     ]
 }

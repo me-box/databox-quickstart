@@ -1,0 +1,39 @@
+{
+  "manifest-version": 1,
+  "name": "app-helloworld-node",
+  "docker-registry": "databoxsystems",
+  "docker-image-tag": "0.5.2",
+  "databox-type": "app",
+  "version": "0.1.0",
+  "description": "basic node hello world app",
+  "author": "Databox Inc.",
+  "licence": "MIT",
+  "databox-type": "app",
+  "tags": [
+    "test",
+    "hello world"
+  ],
+  "homepage": "https://github.com/me-box/databox-quickstart",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/me-box/databox-quickstart.git"
+  },
+  "datasources": [
+    {
+      "type": "helloWorldActuator",
+      "required": true,
+      "name": "helloWorldActuator",
+      "clientid": "helloWorldActuator",
+      "granularities": []
+    }
+  ],
+  "network-permissions": [],
+  "resource-requirements": {},
+  "volumes": [],
+  "export-whitelist": [
+    {
+      "url": "https://export.amar.io/",
+      "description": "Exports the data to amar.io"
+    }
+  ]
+}

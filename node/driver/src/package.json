@@ -1,0 +1,34 @@
+{
+  "name": "driver-helloworld-node",
+  "databoxVersion": "0.5.2",
+  "databoxRepository": "databoxsystems",
+  "databoxPassword": "databoxDev",
+  "databoxDevSrcMnt": "[{\"ContName\":\"driver-helloworld-node\",\"ContSrcPath\":\"/src\",\"HostSrcPath\":\"/Users/tosh/Projects/me-box/databox-quickstart/node/driver/src\"}]",
+  "version": "1.0.0",
+  "description": "databox",
+  "main": "main.js",
+  "scripts": {
+    "//": "start-dev is used to start this app if its installed on to a databox with a :dev tag",
+    "start": "../../../testenv/start.sh && nodemon -L -e js,ejs --max-old-space-size=128 main.js",
+    "start-prod": "node --max-old-space-size=128 main.js",
+    "start-dev": "nodemon -L -e js,ejs --max-old-space-size=128 main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "docker build -t ${npm_package_databoxRepository}/${npm_package_name}-amd64:${npm_package_databoxVersion} .",
+    "build-dev": "docker build -t ${npm_package_databoxRepository}/${npm_package_name}-amd64:${npm_package_databoxVersion} -f Dockerfile-dev .",
+    "start-databox-dev": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox start -sslHostName `hostname` --devmount=${npm_package_databoxDevSrcMnt} --release=${npm_package_databoxVersion} --password=${npm_package_databoxPassword}",
+    "start-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox start -sslHostName `hostname` --release=${npm_package_databoxVersion} --password=${npm_package_databoxPassword}",
+    "stop-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox stop",
+    "wipe-databox": "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --network host -t ${npm_package_databoxRepository}/databox-amd64:${npm_package_databoxVersion} /databox wipe -y ",
+    "upload-manifest": "curl -sL --cookie-jar /tmp/databox-jar -H \"authorization:Token ${npm_package_databoxPassword}\" --insecure --http1.1 -w \"%{http_code}\\n\" https://127.0.0.1/api/connect -o /dev/null; curl -s  --insecure --http1.1 --cookie /tmp/databox-jar -H 'Content-Type: application/json' -X POST -d @databox-manifest.json -L 'https://127.0.0.1/app-store/ui/api/addManifest'"
+  },
+  "author": "Databox Inc",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "node-databox": "^0.9.0"
+  }
+}

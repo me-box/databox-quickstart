@@ -1,0 +1,14 @@
+FROM amd64/alpine:3.8 as build
+RUN echo http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+RUN apk update && apk add build-base go git libzmq zeromq-dev alpine-sdk libsodium-dev make
+RUN apk add 'go>=1.11-r0' --update-cache --repository http://nl.alpinelinux.org/alpine/edge/community
+
+WORKDIR /src
+COPY go.mod ./
+COPY go.sum ./
+RUN go get -u
+LABEL databox.type="driver"
+EXPOSE 8080
+
+RUN go get github.com/cespare/reflex
+CMD ["make","start-dev-mon"]
