@@ -23,5 +23,4 @@ LABEL databox.type="app"
 
 EXPOSE 8080
 
-CMD ["sleep","3000000"]
-#CMD ["npm","run","start-dev"]
+CMD ["npm","run","start-dev"]
