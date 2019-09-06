@@ -28,7 +28,7 @@
         {
             "data-source-type": "helloWorldActuator",
             "description": "hello world actuator",
-            "store-type": "kv",
+            "store-type": "ts/blob",
             "schema": {}
         }
     ]

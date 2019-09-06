@@ -6,6 +6,9 @@ RUN addgroup -S databox && adduser -S -g databox databox && \
 apk --no-cache add build-base pkgconfig nodejs npm libzmq zeromq-dev libsodium-dev python  && \
 npm install zeromq@4.6.0 --zmq-external --verbose
 
+# if using git
+RUN apk --no-cache add git
+
 #globally install node packages and add to path
 ADD ./package.json package.json
 RUN npm install -g

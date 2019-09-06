@@ -5,12 +5,14 @@ var bodyParser = require("body-parser");
 var databox = require("node-databox");
 var WebSocket = require("ws");
 
+const DATABOX_ARBITER_ENDPOINT = process.env.DATABOX_ARBITER_ENDPOINT || 'tcp://127.0.0.1:4444';
 const DATABOX_ZMQ_ENDPOINT = process.env.DATABOX_ZMQ_ENDPOINT || "tcp://127.0.0.1:5555";
 const DATABOX_TESTING = !(process.env.DATABOX_VERSION);
 const PORT = DATABOX_TESTING ? 8090 : process.env.PORT || '8080';
 
-//this will ref the timeseriesblob client which will observe and write to the databox actuator (created in the driver)
-let tsc;
+//this will ref the store client which will observe and write to the databox actuator (created in the driver)
+let store;
+let helloWorldActuatorDataSourceID;
 
 //server and websocket connection;
 let ws, server = null;
@@ -20,37 +22,33 @@ const listenToActuator = (emitter) => {
     console.log("started listening to actuator");
 
     emitter.on('data', (data) => {
-        console.log("seen data from the hello world actuator!", JSON.parse(data.data));
+        console.log("seen data from the hello world actuator!", data);
         if (ws) {
-            ws.send(data.data);
-            databox.export.longpoll('https://export.amar.io/', data.data)
-                .catch((err) => {
-                    console.log("[error] export.longpoll ", err)
-                })
+	    let json = JSON.stringify(data.data)
+            ws.send(json);
+ 	    // Note, export service deprecated and not currently supported
         }
     });
 
     emitter.on('error', (err) => {
-        console.warn(err);
+        console.warn("error from actuator", err);
     });
 }
 
 if (DATABOX_TESTING) {
-    tsc = databox.NewTimeSeriesBlobClient(DATABOX_ZMQ_ENDPOINT, false);
-    tsc.Observe("helloWorldActuator").then((emitter) => {
+    store = databox.NewStoreClient(DATABOX_ZMQ_ENDPOINT, DATABOX_ARBITER_ENDPOINT, false);
+    helloWorldActuatorDataSourceID = "helloWorldActuator";
+    store.TSBlob.Observe(helloWorldActuatorDataSourceID).then((emitter) => {
         listenToActuator(emitter);
     });
 } else {
-    let helloWorldActuator;
-
     //listen in on the helloWorld Actuator, which we have asked permissions for in the manifest
-    databox.HypercatToSourceDataMetadata(process.env[`DATASOURCE_helloWorldActuator`]).then((data) => {
-        helloWorldActuator = data
-        return databox.NewTimeSeriesBlobClient(helloWorldActuator.DataSourceURL, false)
-    }).then((store) => {
-        tsc = store;
-        return store.Observe(helloWorldActuator.DataSourceMetadata.DataSourceID)
-    }).then((emitter) => {
+    let helloWorldActuator = databox.HypercatToDataSourceMetadata(process.env[`DATASOURCE_helloWorldActuator`]);
+    helloWorldActuatorDataSourceID = helloWorldActuator.DataSourceID;
+    let helloWorldStore = databox.GetStoreURLFromHypercat(process.env[`DATASOURCE_helloWorldActuator`]);
+    store = databox.NewStoreClient(helloWorldStore, DATABOX_ARBITER_ENDPOINT, false)
+    store.TSBlob.Observe(helloWorldActuatorDataSourceID, 0)
+    .then((emitter) => {
         listenToActuator(emitter);
     }).catch((err) => {
         console.warn("Error Observing helloWorldActuator", err);
@@ -75,8 +73,9 @@ app.get("/ui", function (req, res) {
 
 app.get('/ui/actuate', (req, res) => {
 
+    let data = { msg: `${Date.now()}: databox actuation event` };
     return new Promise((resolve, reject) => {
-        tsc.Write("helloWorldActuator", { msg: `${Date.now()}: databox actuation event` }).then(() => {
+        store.TSBlob.Write(helloWorldActuatorDataSourceID, data).then(() => {
             console.log("successfully actuated!");
             resolve();
         }).catch((err) => {
@@ -101,7 +100,7 @@ if (DATABOX_TESTING) {
 
 } else {
     console.log("[Creating https server]", PORT);
-    const credentials = databox.getHttpsCredentials();
+    const credentials = databox.GetHttpsCredentials();
     server = https.createServer(credentials, app).listen(PORT);
 }
 
