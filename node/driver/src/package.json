@@ -29,6 +29,6 @@
     "express": "^4.16.3",
     "http": "0.0.0",
     "https": "^1.0.0",
-    "node-databox": "https://github.com/cgreenhalgh/lib-node-databox.git"
+    "node-databox": "^0.10.7"
   }
 }

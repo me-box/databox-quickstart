@@ -9,7 +9,7 @@ const DATABOX_ZMQ_ENDPOINT = process.env.DATABOX_ZMQ_ENDPOINT || "tcp://127.0.0.
 const DATABOX_TESTING = !(process.env.DATABOX_VERSION);
 const PORT = process.env.port || '8080';
 
-const store = databox.NewStoreClient(DATABOX_ZMQ_ENDPOINT, DATABOX_ARBITER_ENDPOINT);
+const store = databox.NewStoreClient(DATABOX_ZMQ_ENDPOINT, DATABOX_ARBITER_ENDPOINT, false);
 
 //get the default store metadata
 const metaData = databox.NewDataSourceMetadata();

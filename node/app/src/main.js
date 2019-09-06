@@ -22,18 +22,16 @@ const listenToActuator = (emitter) => {
     console.log("started listening to actuator");
 
     emitter.on('data', (data) => {
-        console.log("seen data from the hello world actuator!", JSON.parse(data.data));
+        console.log("seen data from the hello world actuator!", data);
         if (ws) {
-            ws.send(data.data);
-            databox.export.longpoll('https://export.amar.io/', data.data)
-                .catch((err) => {
-                    console.log("[error] export.longpoll ", err)
-                })
+	    let json = JSON.stringify(data.data)
+            ws.send(json);
+ 	    // Note, export service deprecated and not currently supported
         }
     });
 
     emitter.on('error', (err) => {
-        console.warn(err);
+        console.warn("error from actuator", err);
     });
 }
 
@@ -48,7 +46,7 @@ if (DATABOX_TESTING) {
     let helloWorldActuator = databox.HypercatToDataSourceMetadata(process.env[`DATASOURCE_helloWorldActuator`]);
     helloWorldActuatorDataSourceID = helloWorldActuator.DataSourceID;
     let helloWorldStore = databox.GetStoreURLFromHypercat(process.env[`DATASOURCE_helloWorldActuator`]);
-    store = databox.NewStoreClient(helloWorldStore, DATABOX_ARBITER_ENDPOINT, true/*debug false*/)
+    store = databox.NewStoreClient(helloWorldStore, DATABOX_ARBITER_ENDPOINT, false)
     store.TSBlob.Observe(helloWorldActuatorDataSourceID, 0)
     .then((emitter) => {
         listenToActuator(emitter);
