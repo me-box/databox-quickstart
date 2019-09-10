@@ -8,6 +8,7 @@ RUN addgroup -S databox && adduser -S -g databox databox && \
     apk del build-base pkgconfig libsodium-dev python zeromq-dev
 
 ADD ./package.json package.json
+ADD ./lib-node-databox /app/lib-node-databox/
 
 # only if using git
 RUN apk --no-cache add git
@@ -22,4 +23,5 @@ LABEL databox.type="app"
 
 EXPOSE 8080
 
-CMD ["npm","run","start-prod"]
+CMD ["sleep","3000000"]
+#CMD ["npm","run","start-prod"]

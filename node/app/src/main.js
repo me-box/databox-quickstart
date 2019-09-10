@@ -14,6 +14,8 @@ const PORT = DATABOX_TESTING ? 8090 : process.env.PORT || '8080';
 let store;
 let helloWorldActuatorDataSourceID;
 
+let exportClient = databox.NewExportClient( DATABOX_ARBITER_ENDPOINT, true )
+
 //server and websocket connection;
 let ws, server = null;
 
@@ -27,7 +29,27 @@ const listenToActuator = (emitter) => {
 	    let json = JSON.stringify(data.data)
             ws.send(json);
  	    // Note, export service deprecated and not currently supported
-        }
+            exportClient.Longpoll( 'http://www.cs.nott.ac.uk/~pszcmg/G52DSY/test3.php', data.data )
+	    .then((res) => {
+		    console.log('Export ok', res)
+		    let poll = function() {
+			    exportClient.Longpoll( 'http://www.cs.nott.ac.uk/~pszcmg/G52DSY/test3.php', data.data, res.id )
+			    .then((res) => {
+				console.log('Export poll ok', res)
+				if (res.state !== 'Finished') 
+				    setTimeout(poll, 10000)
+			    })
+			    .catch((err) => {
+				    console.log('Export poll error', err)
+			    })
+		    }
+		    if (res.id && res.state !== 'Finished')
+			    setTimeout(poll, 1000)
+	    })
+	    .catch((err) => {
+		    console.log('Export error', err)
+	    })
+	}
     });
 
     emitter.on('error', (err) => {
