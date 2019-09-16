@@ -97,3 +97,12 @@ To completely reset databox run:
 ```
 npm run wipe-databox
 ```
+
+# Export Destination
+
+When actuated the app also tries to post data to an external URL using
+the export service. The default URL is `https://postman-echo.com/post`.
+If you change the URL then make sure you change it in the manifest
+export-whitelist, upload the changed manifest and re-install the app,
+as well as changing the URL in the code (`main.js`).
+

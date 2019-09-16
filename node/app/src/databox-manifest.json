@@ -32,8 +32,8 @@
   "volumes": [],
   "export-whitelist": [
     {
-      "url": "http://www.cs.nott.ac.uk/~pszcmg/G52DSY/test3.php",
-      "description": "Exports the data to amar.io"
+      "url": "https://postman-echo.com/post",
+      "description": "Test export"
     }
   ]
 }
