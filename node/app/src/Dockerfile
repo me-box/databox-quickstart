@@ -9,6 +9,9 @@ RUN addgroup -S databox && adduser -S -g databox databox && \
 
 ADD ./package.json package.json
 
+# only if using git
+#RUN apk --no-cache add git
+
 RUN npm install --production
 
 USER databox
@@ -19,4 +22,5 @@ LABEL databox.type="app"
 
 EXPOSE 8080
 
+#CMD ["sleep","3000000"]
 CMD ["npm","run","start-prod"]

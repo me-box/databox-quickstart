@@ -4,7 +4,7 @@
   "databoxRepository": "databoxsystems",
   "databoxPassword": "databoxDev",
   "databoxDevSrcMnt": "[{\"ContName\":\"app-helloworld-node\",\"ContSrcPath\":\"/src\",\"HostSrcPath\":\"/Users/tosh/Projects/me-box/databox-quickstart/node/app/src\"}]",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "databox",
   "main": "main.js",
   "scripts": {
@@ -29,7 +29,7 @@
     "express": "^4.16.3",
     "http": "0.0.0",
     "https": "^1.0.0",
-    "node-databox": "0.9.0",
+    "node-databox": "^0.10.8",
     "ws": "^6.0.0"
   }
 }

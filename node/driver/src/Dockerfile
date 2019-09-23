@@ -9,6 +9,9 @@ apk del build-base pkgconfig libsodium-dev python zeromq-dev
 
 ADD ./package.json package.json
 
+# only if using git...
+RUN apk --no-cache add git
+
 RUN npm install --production
 
 USER databox

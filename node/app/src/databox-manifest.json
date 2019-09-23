@@ -4,7 +4,7 @@
   "docker-registry": "databoxsystems",
   "docker-image-tag": "0.5.2",
   "databox-type": "app",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "basic node hello world app",
   "author": "Databox Inc.",
   "licence": "MIT",
@@ -32,8 +32,8 @@
   "volumes": [],
   "export-whitelist": [
     {
-      "url": "https://export.amar.io/",
-      "description": "Exports the data to amar.io"
+      "url": "https://postman-echo.com/post",
+      "description": "Test export"
     }
   ]
 }
